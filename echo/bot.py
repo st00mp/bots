@@ -249,10 +249,11 @@ async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "*Envoie du texte* → lecture à voix haute (XTTS-v2 local)\n\n"
         "*Commandes*\n"
         "/help — ce message\n"
-        "/dico mot graphie — corriger la prononciation d'un mot\n"
-        "/dico mot — voir la graphie d'un mot\n"
-        "/quota — limites API Groq en cours\n"
-        "/model — modèles actifs\n"
+        "/dico — état du dictionnaire de prononciation\n"
+        "/dico `mot` — voir la graphie d'un mot\n"
+        "/dico `mot graphie` — ajouter ou corriger\n"
+        "/quota — quota Groq (transcription seule, la synthèse est locale)\n"
+        "/model — modèles actifs (STT + TTS)\n"
         "/ping — statut + uptime",
         parse_mode="Markdown",
     )
