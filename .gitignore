@@ -1,0 +1,23 @@
+# ── SECRETS ──────────────────────────────────────────────
+.env
+.env.*
+*.env
+!*.env.example
+
+# ── ARTEFACTS REPRODUCTIBLES ─────────────────────────────
+venv/
+.venv/
+__pycache__/
+*.pyc
+kokoro_models/
+test_output/
+tts-lab/
+out/
+*.wav
+*.ogg
+*.pid
+
+# ── SAUVEGARDES LOCALES ──────────────────────────────────
+*.pre-fusion
+*.fusion-rate
+*.bak*
