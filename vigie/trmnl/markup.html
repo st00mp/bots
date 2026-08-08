@@ -1,0 +1,149 @@
+<!-- Vigie — écran TRMNL (plugin bd8a6e92-…). Miroir du markup poussé via MCP.
+     Données : webhook quotidien ≤ 2 Ko envoyé par `python -m vigie trmnl`
+     (date, scan, gardes, alertes, alerte, une{titre,resume,pourquoi}, items[{t,s,i}]). -->
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+
+<style>
+  .vg-wrap {
+    width: 100%; height: 100%;
+    box-sizing: border-box;
+    padding: 2cqw 2.5cqw;
+    overflow: hidden;
+    background: #fff; color: #000;
+    display: flex; flex-direction: column;
+    font-family: 'VT323', monospace;
+  }
+
+  .vg-head { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; }
+  .vg-brand { display: flex; align-items: center; gap: 1.2cqw; }
+  .vg-brand svg { width: 5cqw; height: 2.9cqw; }
+  .vg-brand b { font: 700 2.4cqw 'Silkscreen'; letter-spacing: 0.02em; }
+  .vg-head-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25cqw; }
+  .vg-date { font: 700 1.6cqw 'Silkscreen'; }
+  .vg-hud  { font: 400 1.6cqw 'VT323'; letter-spacing: 0.05em; }
+
+  .vg-rule { height: 0.5cqw; background: repeating-linear-gradient(90deg, #000 0 1.25cqw, transparent 1.25cqw 2.25cqw); }
+
+  .vg-body { flex: 1 1 auto; min-height: 0; overflow: hidden;
+             display: flex; gap: 2.4cqw; margin-top: 1.6cqw; }
+
+  .vg-une { flex: 0 0 54%; min-width: 0; min-height: 0; overflow: hidden;
+            display: flex; flex-direction: column; }
+  .vg-band { align-self: flex-start; display: flex; align-items: center; gap: 0.9cqw;
+             padding: 0.45cqw 1.1cqw; margin-bottom: 1.3cqw; }
+  .vg-band b { font: 700 1.6cqw 'Silkscreen'; }
+  .vg-band--alerte { background: #000; color: #fff; }
+  .vg-band--une { border: 0.3cqw solid #000; }
+  .vg-band svg { width: 1.7cqw; height: 1.7cqw; }
+  .vg-titre { font: 700 2.9cqw 'Silkscreen'; line-height: 1.18; margin-bottom: 1.3cqw;
+              display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .vg-resume { font: 400 2.3cqw 'VT323'; line-height: 1.28; margin-bottom: 1.1cqw;
+               display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+  .vg-pourquoi { font: 400 2.15cqw 'VT323'; line-height: 1.25;
+                 border-left: 0.5cqw solid #000; padding-left: 1cqw;
+                 display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .vg-liste { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+  .vg-label { display: flex; align-items: center; gap: 1.3cqw; margin-bottom: 1cqw; }
+  .vg-label b { font: 700 1.65cqw 'Silkscreen'; }
+  .vg-items { flex: 1 1 auto; display: flex; flex-direction: column; gap: 0; min-height: 0; overflow: hidden; }
+  .vg-item { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; padding: 0.75cqw 0; }
+  .vg-item + .vg-item { border-top: 0.18cqw dashed #000; }
+  .vg-item-head { display: flex; align-items: baseline; gap: 0.9cqw; }
+  .vg-imp { flex: 0 0 auto; display: flex; gap: 0.3cqw; align-self: center; }
+  .vg-imp svg { width: 1.35cqw; height: 1.35cqw; }
+  .vg-item-t { font: 400 2.05cqw 'VT323'; line-height: 1.15;
+               white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vg-item-s { font: 400 1.7cqw 'VT323'; line-height: 1.15; margin-top: 0.2cqw;
+               padding-left: 4.5cqw;
+               white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .vg-foot { flex: 0 0 auto; margin-top: 1.4cqw; background: #000; color: #fff;
+             display: flex; align-items: center; justify-content: center; gap: 1cqw;
+             padding: 0.7cqw 0; }
+  .vg-foot span { font: 400 2cqw 'VT323'; letter-spacing: 0.04em; }
+  .vg-foot i { display: inline-block; width: 1cqw; height: 1.7cqw; background: #fff; }
+</style>
+
+<div class="layout layout--col">
+  <div class="vg-wrap">
+
+    <div class="vg-head">
+      <div class="vg-brand">
+        <svg viewBox="0 0 18 10">
+          <rect x="9" y="0" width="2" height="1" fill="#000"/><rect x="8" y="1" width="1" height="1" fill="#000"/>
+          <rect x="8" y="1" width="4" height="1" fill="#000"/><rect x="7" y="2" width="5" height="1" fill="#000"/>
+          <rect x="6" y="3" width="7" height="1" fill="#000"/><rect x="5" y="4" width="8" height="1" fill="#000"/>
+          <rect x="4" y="5" width="10" height="1" fill="#000"/><rect x="3" y="6" width="12" height="1" fill="#000"/>
+          <rect x="2" y="7" width="14" height="1" fill="#000"/><rect x="1" y="8" width="16" height="1" fill="#000"/>
+          <rect x="0" y="9" width="18" height="1" fill="#000"/>
+          <rect x="8" y="2" width="3" height="1" fill="#fff"/><rect x="7" y="3" width="3" height="1" fill="#fff"/>
+          <rect x="10" y="3" width="2" height="1" fill="#fff"/><rect x="9" y="4" width="3" height="1" fill="#fff"/>
+          <rect x="6" y="5" width="2" height="1" fill="#fff"/>
+        </svg>
+        <b>VIGIE</b>
+      </div>
+      <div class="vg-head-right">
+        <span class="vg-date">{{ date }}</span>
+        <span class="vg-hud">SCAN {{ scan }} · GARDÉS {{ gardes }} · ALERTES {{ alertes }}</span>
+      </div>
+    </div>
+
+    <div class="vg-rule" style="flex:0 0 auto; margin-top:1.2cqw;"></div>
+
+    {% if une %}
+    <div class="vg-body">
+
+      <div class="vg-une">
+        {% if alerte %}
+          <div class="vg-band vg-band--alerte">
+            <svg viewBox="0 0 8 8"><rect x="3" y="0" width="2" height="5" fill="#fff"/><rect x="3" y="6" width="2" height="2" fill="#fff"/></svg>
+            <b>ALERTE</b>
+          </div>
+        {% else %}
+          <div class="vg-band vg-band--une"><b>★ À LA UNE</b></div>
+        {% endif %}
+        <div class="vg-titre">{{ une.titre }}</div>
+        <div class="vg-resume">{{ une.resume }}</div>
+        <div class="vg-pourquoi">{{ une.pourquoi }}</div>
+      </div>
+
+      <div class="vg-liste">
+        <div class="vg-label">
+          <b>À LIRE</b>
+          <div class="vg-rule" style="flex:1;"></div>
+        </div>
+        <div class="vg-items">
+          {% for it in items %}
+          <div class="vg-item">
+            <div class="vg-item-head">
+              <div class="vg-imp">
+                {% for d in (1..3) %}
+                {% if d <= it.i %}
+                <svg viewBox="0 0 8 8"><rect x="3" y="0" width="2" height="1" fill="#000"/><rect x="2" y="1" width="4" height="1" fill="#000"/><rect x="1" y="2" width="6" height="1" fill="#000"/><rect x="0" y="3" width="8" height="2" fill="#000"/><rect x="1" y="5" width="6" height="1" fill="#000"/><rect x="2" y="6" width="4" height="1" fill="#000"/><rect x="3" y="7" width="2" height="1" fill="#000"/></svg>
+                {% else %}
+                <svg viewBox="0 0 8 8"><rect x="3" y="3" width="2" height="2" fill="#000"/></svg>
+                {% endif %}
+                {% endfor %}
+              </div>
+              <div class="vg-item-t">{{ it.t }}</div>
+            </div>
+            {% if it.s != "" %}<div class="vg-item-s">{{ it.s }}</div>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+    {% else %}
+    <div class="vg-body" style="align-items:center; justify-content:center;">
+      <div style="font: 700 2.6cqw 'Silkscreen';">EN ATTENTE DU PREMIER DIGEST…</div>
+    </div>
+    {% endif %}
+
+    <div class="vg-foot">
+      <span>LA SUITE SUR TELEGRAM → @vigie_st00mp_bot</span><i></i>
+    </div>
+
+  </div>
+</div>

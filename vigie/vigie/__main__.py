@@ -17,6 +17,9 @@ def main() -> None:
     elif cmd == "deliver":
         from . import deliver
         deliver.run()
+    elif cmd == "trmnl":
+        from . import trmnl
+        trmnl.push()
     elif cmd == "run":
         from . import deliver, fetch, synthesize
         from . import filter as filt

@@ -53,6 +53,15 @@ dans l'environnement, endpoint par `KIMI_BASE_URL`).
 `.env` (chmod 600, jamais commité) : `KIMI_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
 Le bot est `@vigie_st00mp_bot` ; le `chat_id` s'obtient en écrivant au bot puis `getUpdates`.
 
+## Écran TRMNL
+
+Vitrine e-ink optionnelle : après la livraison Telegram, `deliver` pousse un teaser
+(≤ 2 Ko : la une + 5 titres + compteurs) au webhook du plugin privé si `TRMNL_PLUGIN_UUID`
+est présent dans `.env`. Re-pousser à la main : `python -m vigie trmnl`. Le markup du
+plugin (pixel-art, unités `cqw`, polices Silkscreen/VT323) est le miroir de
+`trmnl/markup.html`, géré via le serveur MCP de TRMNL (`https://trmnl.com/mcp`, clé
+`TRMNL_MCP_KEY` scopée au plugin). Un échec TRMNL n'empêche jamais le digest Telegram.
+
 ## Cron
 
 Sur l'hôte (`crontab -l`) : la chaîne complète tourne chaque jour à 07h10, journal dans

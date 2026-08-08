@@ -113,3 +113,11 @@ def run() -> None:
     con.commit()
     n_alert = sum(1 for a in articles if a["tripwire"])
     print(f"digest livré : {len(articles)} articles en {len(messages)} message(s), dont {n_alert} ALERTE")
+
+    if os.environ.get("TRMNL_PLUGIN_UUID"):
+        # vitrine e-ink : un échec ici ne doit jamais invalider la livraison Telegram
+        try:
+            from . import trmnl
+            trmnl.push()
+        except Exception as e:
+            print(f"écran TRMNL non poussé : {e}", file=sys.stderr)
