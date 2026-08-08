@@ -55,7 +55,7 @@
   .vg-item-t { font: 400 2.25cqw 'VT323'; line-height: 1.18; min-width: 0;
                display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .vg-item-s { font: 400 1.85cqw 'VT323'; line-height: 1.22; margin-top: 0.45cqw;
-               padding-left: 4.9cqw;
+               padding-left: 2.3cqw;
                display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
 </style>
 
@@ -117,8 +117,6 @@
                 {% for d in (1..3) %}
                 {% if d <= it.i %}
                 <svg viewBox="0 0 8 8"><rect x="3" y="0" width="2" height="1" fill="#000"/><rect x="2" y="1" width="4" height="1" fill="#000"/><rect x="1" y="2" width="6" height="1" fill="#000"/><rect x="0" y="3" width="8" height="2" fill="#000"/><rect x="1" y="5" width="6" height="1" fill="#000"/><rect x="2" y="6" width="4" height="1" fill="#000"/><rect x="3" y="7" width="2" height="1" fill="#000"/></svg>
-                {% else %}
-                <svg viewBox="0 0 8 8"><rect x="3" y="3" width="2" height="2" fill="#000"/></svg>
                 {% endif %}
                 {% endfor %}
               </div>
