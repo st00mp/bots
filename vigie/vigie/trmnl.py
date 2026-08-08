@@ -52,10 +52,21 @@ def build_payload(con) -> dict | None:
             "pourquoi": _cut(une["why"], 160),
             "meta": f"{THEME_COURT.get(une['theme'], une['theme'])} · IMPACT {une['impact'] or 0}",
         },
-        "items": [{"t": _cut(a["title_fr"] or a["title"], 120), "s": _cut(a["summary"], 180),
+        "items": [{"t": _cut(a["title_fr"] or a["title"], 160), "s": _cut(a["summary"], 340),
                    "i": a["impact"] or 0} for a in others],
     }
-    while len(json.dumps(payload, ensure_ascii=False).encode()) > MAX_BYTES and payload["items"]:
+
+    def _size() -> int:
+        return len(json.dumps(payload, ensure_ascii=False).encode())
+
+    # coupe adaptative : on n'ampute les résumés que si le webhook (2 Ko) l'exige,
+    # et on ne lâche un item qu'en tout dernier recours
+    cut = 340
+    while _size() > MAX_BYTES and cut > 140:
+        cut -= 20
+        for it, a in zip(payload["items"], others):
+            it["s"] = _cut(a["summary"], cut)
+    while _size() > MAX_BYTES and payload["items"]:
         payload["items"].pop()
     return payload
 
