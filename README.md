@@ -5,18 +5,22 @@ aucune mémoire, aucun outil — des programmes qui font une chose. Les agents (
 vivent dans Hermes et sont versionnés dans `st00mp/agents`.
 
 ```
-echo/   @echo_verbatim_bot — voix ↔ texte, bidirectionnel (Docker, production)
-          vocal reçu → transcription texte   (Groq Whisper)
-          texte reçu → lecture à voix haute  (TTS local)
-v0x/    ancien lecteur de notes Markdown → voice notes (Kokoro). Remplacé par le
-          chemin texte→voix d'echo ; conservé comme source des modèles Kokoro,
-          montés en volume par echo.
+echo/     @echo_verbatim_bot — voix ↔ texte, bidirectionnel (Docker, production)
+            vocal reçu → transcription texte   (Groq Whisper)
+            texte reçu → lecture à voix haute  (XTTS-v2, secours Kokoro)
+models/   poids des modèles montés en volume par echo — hors git, reproductibles
 ```
 
-Historique : ces deux bots vivaient dans `~/.openclaw/workspace-forge/agents/`, le
+Historique : ces bots vivaient dans `~/.openclaw/workspace-forge/agents/`, le
 workspace d'un agent OpenClaw — avec un compose de production que
 `/opt/infra/update-stacks.conf` devait épargner par une règle `hold`. Sortis le
 2026-08-06 pendant la migration OpenClaw → Hermes.
+
+`v0x` lisait des notes Markdown en voice notes. Sa fonction a été absorbée par le
+chemin texte→voix d'`echo` le 2026-08-06 ; il a été supprimé le 08, avec ses
+artefacts reproductibles (venv, modèles). Son code reste dans l'historique git.
+Les poids Kokoro ont migré vers `models/` : un bot vivant n'a pas à dépendre du
+répertoire d'un bot mort.
 
 ## Prononciation française : le correctif `phonemize_mixed`
 

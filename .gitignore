@@ -10,6 +10,7 @@ venv/
 __pycache__/
 *.pyc
 kokoro_models/
+models/
 test_output/
 tts-lab/
 out/

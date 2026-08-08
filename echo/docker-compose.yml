@@ -25,7 +25,7 @@ services:
       # est monté exactement là.
       - HOME=/tmp
     volumes:
-      - /home/st00mp/bots/v0x/kokoro_models:/models:ro
+      - /home/st00mp/bots/models/kokoro:/models:ro
       - /home/st00mp/.local/share/tts:/tmp/.local/share/tts:ro
       - /home/st00mp/bots/echo/data:/data
     # XTTS résident ≈ 2,5 Go ; borne dure pour protéger GitLab et Minecraft.
