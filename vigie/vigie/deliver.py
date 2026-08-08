@@ -4,6 +4,7 @@ import datetime
 import html
 import os
 import sys
+from email.utils import parsedate_to_datetime
 
 import httpx
 import yaml
@@ -18,14 +19,25 @@ def esc(s: str) -> str:
     return html.escape(s or "", quote=False)
 
 
+def art_date(a) -> str:
+    """Date de publication si le flux la donne, sinon date de collecte."""
+    if a["published"]:
+        try:
+            return parsedate_to_datetime(a["published"]).date().isoformat()
+        except (TypeError, ValueError):
+            if a["published"][:4].isdigit():
+                return a["published"][:10]
+    return (a["fetched_at"] or "")[:10]
+
+
 def item_html(a, theme_names: dict, alert: bool = False) -> str:
     title = esc(a["title"])
     head = title if a["url"].startswith("vigie://") else f'<a href="{a["url"]}">{title}</a>'
     if alert:
-        head = f"🚨 <b>ALERTE</b> — <b>{head}</b>"
+        head = f"🚨 <b>ALERTE</b> — <b>{head}</b>\n<i>{art_date(a)}</i>"
     else:
         label = theme_names.get(a["theme"], a["theme"])
-        head = f"<b>{head}</b>\n<i>{esc(label)} · impact {a['impact']}</i>"
+        head = f"<b>{head}</b>\n<i>{esc(label)} · impact {a['impact']} · {art_date(a)}</i>"
     parts = [head]
     if a["summary"]:
         parts.append(esc(a["summary"]))
