@@ -1,0 +1,83 @@
+# Sources de Vigie.
+# type: rss       -> flux RSS/Atom, chaque entrée devient un article
+#       listing   -> page de liste : on suit les liens qui ressemblent à des articles
+#       page-diff -> on surveille le texte de la page ; tout changement devient un article
+# max_items : plafond de nouveaux articles par passage (rss/listing)
+# include   : regex — un lien de listing n'est suivi que s'il matche (coupe la navigation)
+# brand     : sur le site de cette marque, le garde-fou mots-clés ignore son propre nom
+
+sources:
+  # --- presse et institutions (Thèmes 1, 2, 3)
+  - name: blog-itaa
+    type: rss
+    url: https://blog.itaa.be/feed/
+    max_items: 15
+  - name: trends-tendances
+    type: rss
+    url: https://trends.levif.be/feed/
+    max_items: 20
+  - name: accountancy-vandaag        # NL, mais couvre l'écosystème Visma/Silverfin (T4/T5)
+    type: rss
+    url: https://accountancyvandaag.be/feed/
+    max_items: 15
+  - name: spf-finances
+    type: listing
+    url: https://finances.belgium.be/fr/Actualites
+    include: "/fr/Actualites/(?!overview)"
+    max_items: 10
+  - name: cnc-cbn
+    type: listing
+    url: https://www.cnc-cbn.be/fr
+    include: "/fr/(nouvelles|avis)/"
+    max_items: 8
+  # taxwin et fiscologue retirés : applis JS / paywall, rien d'exploitable en statique
+  - name: forum-for-the-future
+    type: page-diff
+    url: https://www.forumforthefuture.be/
+
+  # --- éditeurs installés (Thème 4)
+  - name: winbooks-blog
+    type: listing
+    url: https://www.winbooks.be/fr/blog/
+    include: "/befr/(blog|nouvelles)/"
+    max_items: 8
+  - name: horus
+    type: page-diff
+    url: https://www.horussoftware.be/
+  - name: adminpulse
+    type: listing
+    url: https://adminpulse.eu/nl-be/blog
+    include: "/blog/"
+    max_items: 8
+    brand: adminpulse
+  - name: visma-newsroom             # rachats et annonces de l'écosystème Visma (T4/T5)
+    type: listing
+    url: https://www.visma.com/newsroom
+    include: "/newsroom/."
+    max_items: 8
+  - name: silverfin                  # 403 anti-bot : reste en place, se signalera s'il répond un jour
+    type: listing
+    url: https://www.silverfin.com/blog
+    include: "/(blog|resources)/"
+    max_items: 8
+    brand: silverfin
+
+  # --- tripwires concurrents (Thème 5)
+  - name: devizen
+    type: page-diff
+    url: https://www.devizen.fr/
+    brand: devizen
+  - name: kanta-blog
+    type: listing
+    url: https://www.kanta.fr/blog
+    include: "kanta\\.fr/articles/"
+    max_items: 8
+    brand: kanta
+  - name: kanta-home
+    type: page-diff
+    url: https://www.kanta.fr/
+    brand: kanta
+  - name: kanta-ldm                  # la page produit qui recouvre exactement le terrain de Matterhorn
+    type: page-diff
+    url: https://www.kanta.fr/modules/prospects-et-lettres-de-mission
+    brand: kanta

@@ -1,0 +1,14 @@
+services:
+  vigie:
+    build:
+      context: .
+      network: host        # DNS du bridge mort depuis le durcissement worker_guard
+    image: vigie:latest
+    network_mode: host     # accès direct à Ollama sur 127.0.0.1:11434
+    env_file: .env
+    environment:
+      OLLAMA_URL: http://127.0.0.1:11434
+    volumes:
+      - ./data:/app/data
+      - ./sources.yaml:/app/sources.yaml:ro
+      - ./themes.yaml:/app/themes.yaml:ro

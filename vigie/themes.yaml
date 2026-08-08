@@ -1,0 +1,84 @@
+# Thèmes de Vigie : ancres embeddées et seuils du filtre grossier.
+# score d'un article pour un thème = cos(article, positive) - max(cos(article, negative), cos(article, global_negative))
+# Un article survit s'il dépasse le seuil d'au moins un thème, OU s'il contient un mot-clé tripwire.
+# Éditable sans rebuild (monté en volume) ; seuils à ajuster ici.
+
+embedding:
+  model: nomic-embed-text
+  max_chars: 1800          # tronque le corps de l'article avant embedding
+
+# Bruit n°1 de la presse comptable belge en 2026 : rejeté pour TOUS les thèmes.
+global_negative: >
+  Peppol, e-facturation, facture électronique, facturation électronique obligatoire,
+  réseau Peppol, e-invoicing, envoi de factures structurées
+
+# Garde-fou Thème 5 : ces mots (insensibles à la casse, frontière de mot) court-circuitent
+# le filtre — l'article part toujours au tri fin, qui confirme ou non le tripwire.
+tripwire_keywords:
+  - devizen
+  - kanta
+  - silverfin
+  - adminpulse
+  - accounton
+
+themes:
+  - key: t5-tripwires
+    name: "Tripwires concurrents"
+    priority: 0            # ordre dans le digest : ALERTE d'abord
+    threshold: 0.06
+    positive: >
+      Devizen Belgique, Kanta Belgique ITAA, lettre de mission automatisée,
+      Silverfin proposition commerciale, AdminPulse onboarding prospect,
+      génération automatique de lettre de mission pour experts-comptables
+    negative: >
+      fonctionnalités de production comptable, tableaux de bord de reporting,
+      encodage automatisé
+
+  - key: t1-ldm
+    name: "Norme et conformité de la lettre de mission"
+    priority: 1
+    threshold: 0.09
+    positive: >
+      lettre de mission ITAA, modèles BeExcellent, déontologie ITAA,
+      obligations anti-blanchiment à l'acceptation d'un client,
+      identification du bénéficiaire effectif,
+      entrée en relation entre cabinet comptable et client
+    negative: >
+      contrôle fiscal, contentieux individuel, sanctions disciplinaires
+      sans lien avec le contrat d'engagement
+
+  - key: t2-fiscal
+    name: "Actualité fiscale et réglementaire belge"
+    priority: 2
+    threshold: 0.08
+    positive: >
+      nouvelles obligations déclaratives pour PME belges, changements TVA,
+      réformes des délais de dépôt, charge administrative des cabinets
+      comptables belges
+    negative: >
+      fiscalité internationale, IPP des particuliers sans société,
+      débats de politique fiscale théorique
+
+  - key: t3-metier
+    name: "Métier des fiduciaires"
+    priority: 3
+    threshold: 0.08
+    positive: >
+      pénurie de talents dans les fiduciaires belges, consolidation et rachat
+      de cabinets comptables, transmission de cabinet, surcharge de travail
+      des experts-comptables, relation client des fiduciaires,
+      tarification des missions comptables
+    negative: >
+      grands cabinets d'audit internationaux, professions juridiques,
+      actualité RH généraliste
+
+  - key: t4-outils
+    name: "Outils installés chez les fiduciaires"
+    priority: 4
+    threshold: 0.08
+    positive: >
+      Silverfin, Horus, WinBooks, AdminPulse, Accounton, Odoo pour fiduciaires :
+      nouvelles fonctionnalités, changement de tarification, rachat, partenariat
+    negative: >
+      tutoriels d'utilisation, webinaires produit, offres d'emploi des éditeurs,
+      actualité corporate sans impact fonctionnel
