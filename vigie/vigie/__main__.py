@@ -35,7 +35,7 @@ def main() -> None:
         con.commit()
         insert_article(
             con, "test-alerte", "vigie://test-tripwire",
-            "Kanta annonce le support des lettres de mission ITAA en Belgique",
+            "[TEST — fausse annonce, exercice Vigie] Kanta annonce le support des lettres de mission ITAA en Belgique",
             "",
             "Kanta ouvre son offre au marché belge : génération automatique de lettres de mission "
             "conformes à la déontologie ITAA pour les experts-comptables belges, avec modèles "
