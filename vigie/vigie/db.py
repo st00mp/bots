@@ -41,4 +41,8 @@ def connect() -> sqlite3.Connection:
     con = sqlite3.connect(DB_PATH)
     con.row_factory = sqlite3.Row
     con.executescript(SCHEMA)
+    try:  # migration douce : titre traduit en français par la synthèse
+        con.execute("alter table articles add column title_fr text")
+    except sqlite3.OperationalError:
+        pass
     return con

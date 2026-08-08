@@ -31,7 +31,7 @@ def art_date(a) -> str:
 
 
 def item_html(a, theme_names: dict, alert: bool = False) -> str:
-    title = esc(a["title"])
+    title = esc(a["title_fr"] or a["title"])
     head = title if a["url"].startswith("vigie://") else f'<a href="{a["url"]}">{title}</a>'
     if alert:
         head = f"🚨 <b>ALERTE</b> — <b>{head}</b>\n<i>{art_date(a)}</i>"

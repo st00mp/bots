@@ -11,6 +11,8 @@ from .db import connect
 
 MOIS = ["JAN", "FÉV", "MAR", "AVR", "MAI", "JUIN",
         "JUIL", "AOÛT", "SEP", "OCT", "NOV", "DÉC"]
+THEME_COURT = {"t1-ldm": "LDM & CONFORMITÉ", "t2-fiscal": "FISCAL BE", "t3-metier": "MÉTIER FIDUCIAIRES",
+               "t4-outils": "OUTILS INSTALLÉS", "t5-tripwires": "CONCURRENTS"}
 MAX_BYTES = 1900  # marge sous la limite webhook de 2 Ko
 
 
@@ -34,7 +36,7 @@ def build_payload(con) -> dict | None:
         return None
 
     une = next((a for a in arts if not a["parking"]), arts[0])
-    others = [a for a in arts if a["id"] != une["id"] and (a["impact"] or 0) >= 1][:5]
+    others = [a for a in arts if a["id"] != une["id"] and (a["impact"] or 0) >= 1][:3]
     scanned = con.execute("select count(*) from articles where date(fetched_at)=?", (day,)).fetchone()[0]
     d = datetime.date.fromisoformat(day)
 
@@ -45,11 +47,12 @@ def build_payload(con) -> dict | None:
         "alertes": sum(1 for a in arts if a["tripwire"]),
         "alerte": bool(une["tripwire"]),
         "une": {
-            "titre": _cut(une["title"], 90),
-            "resume": _cut(une["summary"], 260),
-            "pourquoi": _cut(une["why"], 110),
+            "titre": _cut(une["title_fr"] or une["title"], 120),
+            "resume": _cut(une["summary"], 400),
+            "pourquoi": _cut(une["why"], 160),
+            "meta": f"{THEME_COURT.get(une['theme'], une['theme'])} · IMPACT {une['impact'] or 0}",
         },
-        "items": [{"t": _cut(a["title"], 60), "s": _cut(a["why"] or a["summary"], 80),
+        "items": [{"t": _cut(a["title_fr"] or a["title"], 120), "s": _cut(a["summary"], 180),
                    "i": a["impact"] or 0} for a in others],
     }
     while len(json.dumps(payload, ensure_ascii=False).encode()) > MAX_BYTES and payload["items"]:

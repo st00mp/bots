@@ -22,6 +22,8 @@ Tu reçois un article (titre, source, thème pressenti, texte). Tu réponds UNIQ
 {
   "impact": 0 à 3,          // 0 = sans intérêt pour Matterhorn ; 1 = contexte utile ; 2 = impact concret
                             // sur Matterhorn ou sa verticale ; 3 = impact direct qui appelle une action
+  "titre_fr": "...",        // le titre de l'article traduit fidèlement en français
+                            // (recopié tel quel s'il est déjà en français)
   "resume": "...",          // exactement 2 phrases, en français, factuelles
   "pourquoi": "...",        // 1 ligne : pourquoi ça compte pour Matterhorn
   "tripwire": true/false,   // voir règles strictes ci-dessous
@@ -70,6 +72,7 @@ def judge(client: httpx.Client, art) -> dict:
             out = json.loads(r.json()["choices"][0]["message"]["content"])
             return {
                 "impact": max(0, min(3, int(out["impact"]))),
+                "titre_fr": str(out.get("titre_fr") or "").strip(),
                 "resume": str(out["resume"]).strip(),
                 "pourquoi": str(out["pourquoi"]).strip(),
                 "tripwire": bool(out["tripwire"]),
@@ -95,8 +98,10 @@ def run(limit: int | None = None) -> None:
             print(f"  ! {art['title'][:60]} : {e}", file=sys.stderr)
             continue
         con.execute(
-            "update articles set impact=?, summary=?, why=?, tripwire=?, parking=?, status='synthesized' where id=?",
-            (v["impact"], v["resume"], v["pourquoi"], int(v["tripwire"]), int(v["parking"]), art["id"]),
+            "update articles set impact=?, title_fr=?, summary=?, why=?, tripwire=?, parking=?, "
+            "status='synthesized' where id=?",
+            (v["impact"], v["titre_fr"] or None, v["resume"], v["pourquoi"],
+             int(v["tripwire"]), int(v["parking"]), art["id"]),
         )
         con.commit()
         tag = "ALERTE " if v["tripwire"] else ("parking" if v["parking"] else f"impact {v['impact']}")
